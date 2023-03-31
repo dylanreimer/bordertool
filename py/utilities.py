@@ -1,5 +1,6 @@
 from PIL import Image, ImageDraw, ImageFont
 import os
+import argparse
 
 
 # Add border and text to input images
@@ -33,25 +34,35 @@ def editImage(text):
             # put border over image
             image.paste(border, (0, 0), border.convert('RGBA'))
 
-            # create draw object
-            draw = ImageDraw.Draw(image)
-            # set font size
-            fontSize = 50
-            # create font object
-            font = ImageFont.truetype(os.path.join(os.path.dirname(__file__), '../fonts', 'Arial Bold.ttf'), fontSize)
-            # put text over image
-            draw.text((iwidth - 400, fontSize/3), text, font=font, fill=(0, 0, 0))
+            if text:
+                # create draw object
+                draw = ImageDraw.Draw(image)
+                # set font size
+                fontSize = 50
+                # create font object
+                font = ImageFont.truetype(os.path.join(os.path.dirname(__file__), '../fonts', 'Arial Bold.ttf'), fontSize)
 
-            
+                # get text length
+                textLength = draw.textlength(text, font=font)
+                # put text over image
+                draw.text((iwidth - textLength - fontSize/3, fontSize/3), text, font=font, fill=(0, 0, 0))
+
             # save image
             image.save(os.path.join(os.path.dirname(__file__), '../img/output', imageName + '_' + borderName + '.png'))
 
 
 # Utilities for the project
-def main(text):
+def main():
+
+    # parse command line arguments
+    parser = argparse.ArgumentParser()
+    # add non essential argument
+    parser.add_argument("-t", "--text", help="text to be added to the image", required=False)
+    args = parser.parse_args()
+
+    text = args.text
     editImage(text)
-    return
 
 
 if __name__ == '__main__':
-    main("BLACK FRIDAY")
+    main()
