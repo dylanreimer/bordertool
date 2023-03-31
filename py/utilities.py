@@ -14,8 +14,11 @@ def editImage(text):
             continue
 
         # iterate through borders
-        for borderFile in os.listdir(os.path.join(os.path.dirname(__file__), '../img/borders')):
+        for borderFile in os.listdir(os.path.join(os.path.dirname(__file__), '../img/borders/blank')):
 
+            if borderFile == '.DS_Store':
+                continue
+        
             # open image
             image = Image.open('../img/input/' + imageFile) 
             # get current image size
@@ -24,7 +27,7 @@ def editImage(text):
             imageName = imageFile.split('.')[0]
 
             # open border
-            border = Image.open('../img/borders/' + borderFile)
+            border = Image.open('../img/borders/blank/' + borderFile)
             # get border size
             bwidth, bheight = border.size
             # strip file extension
@@ -45,7 +48,8 @@ def editImage(text):
                 # get text length
                 textLength = draw.textlength(text, font=font)
                 # put text over image
-                draw.text((iwidth - textLength - fontSize/3, fontSize/3), text, font=font, fill=(0, 0, 0))
+                # draw.text((iwidth - textLength - fontSize/3, fontSize/3), text, font=font, fill=(0, 0, 0))
+                draw.text((fontSize*2/3, iheight - (fontSize*5/3)), text, font=font, fill=(0, 0, 0))
 
             # save image
             image.save(os.path.join(os.path.dirname(__file__), '../img/output', imageName + '_' + borderName + '.png'))
